@@ -1,0 +1,180 @@
+<!doctype html>
+<html class='h-100' lang='en'>
+    <head>
+        <meta content='text/html; charset=UTF-8'>
+        <title>Set node next right</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href='/static/style.css' rel='stylesheet'>
+    </head>
+    <body class='bg-light h-100'>
+        <div class='container-fluid h-100'>
+            <div class='row h-100' style='flex-wrap: nowrap;'>
+                <nav class='navbar navbar-expand-lg navbar-dark bg-dark align-content-baseline'>
+                    <div class='sidebar-sticky'>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon" style='bg-light'></span>
+                        </button>
+                        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                            <ul class='nav flex-column'>
+                                <img src='/images/portrait.jpg' class='img-thumbnail rounded-circle'>
+                                <p></p>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='/index.html'>Home</a>
+                                </li>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='/projects.html'>Projects</a>
+                                </li>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='/tutorials.html'>Tutorials</a>
+                                </li>
+                                <p></p>
+                                <p></p>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='https://github.com/Hilldrupca'>Github</a>
+                                </li>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='https://www.linkedin.com/in/christopher-hilldrup-295a12179/'>LinkedIn</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class='col-sm pt-5 px-5 bg-light h-100' style='overflow-y: auto;' role='main'>
+                    <div class='em-50'>
+    <h1>Binary Tree: Set node next right</h1>
+    <p>
+    Problem: Given a perfect binary tree, populate each node's next pointer to the node on it's right. Each node's next pointer is initialized to None.<br>
+    <br>
+    Language: Python
+    </p>
+    <br>
+    <p>
+    Let's start by defining what a perfect binary tree is. As the name implies, it is a binary tree. All leaf nodes are on the same level, and every parent node has two child nodes. The following are examples of perfect binary trees:
+    </p>
+    <pre>
+        <code>
+                       _1_
+                      /   \        
+            1        2     3
+           / \      / \   / \
+          2   3    4   5 6   7
+        </code>
+    </pre>
+    <p>
+    The following are <u>NOT</u> perfect binary trees:
+    </p>
+    <pre>
+        <code>
+                       _1_
+                      /   \
+            1        2     3
+             \      / \     \
+              2    4   5     6
+        </code>
+    </pre>
+    <p>
+    No matter how we decide to traverse the tree, we will always set the current node's left next pointer equal to the current node's right beginning with the root node. This also allows us to access a node's next pointer so we can also set the current node's right next pointer. Below we will discuss three approaches: level order queue, recursive, and level order nested while loops. In each instance, the following TreeNode class will be used:
+    </p>
+    <pre>
+        <code>
+        class TreeNode:
+            def __init__(self, val=0, left=None, right=None, next=None):
+                self.val = val
+                self.left = left
+                self.right = right
+                self.next = next
+        </code>
+    </pre>
+    <h5>Method 1: Queue</h5>
+    <p>
+    This approach visits each node in a level order fashion. For each node in a level, set the appropriate node pointers, and add child nodes to the queue. This is equivalent to a breadth first traversal.
+    </p>
+    <pre>
+        <code>
+        from collections import deque
+        
+        def set_next_pointer(node: TreeNode) -> None:
+            if not root or not root.left:
+                return
+            
+            queue = deque([root])
+            while queue:
+                node = queue.popleft()
+                
+                node.left.next = node.right
+                if node.next:
+                    node.right.next = node.next.left
+                    
+                # Only add child nodes if there is at least one level beyond
+                if node.left.left:
+                    queue.append(node.left)
+                    queue.append(node.right)
+        </code>
+    </pre>
+    <p>
+    Time Complexity: O(N)<br>
+    Space Complexity: O(N)
+    </p>
+    <br>
+    <h5>Method 2: Recursive</h5>
+    <p>
+    Nodes will be visited in the order of left subtree, and then right subtree beginning with the root node. Approriate next pointers will be set upon visited each node. This approach also has the benefit of relatively few lines of code.
+    </p>
+    <pre>
+        <code>
+        def set_next_pointer(node: TreeNode) -> None:
+            if not node:
+                return
+                
+            root.left.next = root.right
+            if root.next:
+                root.right.next = root.next.left
+                
+            set_next_pointer(root.left)
+            set_next_pointer(root.right)
+        </code>
+    </pre>
+    <p>
+    Time Complexity: O(N)<br>
+    Space Complexity: O(n) where n is the depth of the tree
+    </p>
+    <br>
+    <h5>Method 3: Nested While Loops (level order)</h5>
+    <p>
+    Can we improve upon the two methods above in terms of space or time complexity? As it turns out, we can. At least for space complexity. In the following approach, we will use an outer while loop to traverse the left most nodes of the tree. This always give us the beginning node of a level. Then we use an inner while loop to traverse the level from left to right. No additional memory is allocated for a queue, or heap stack.
+    </p>
+    <pre>
+        <code>
+        def set_next_pointer(node: TreeNode) -> None:
+            if not root:
+                return
+                
+            leftmost = root
+            
+            while leftmost.left:
+                cur = leftmost
+                
+                while cur:
+                    cur.left.next = cur.right
+                    
+                    if cur.next:
+                        cur.right.next = cur.next.left
+                        
+                    cur = cur.next
+                    
+                leftmost = leftmost.left
+        </code>
+    </pre>
+    <p>
+    Time Complexity: O(N)<br>
+    Space Complexity: O(1)
+    </p>
+</div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" rel='javascript' integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" rel='javascript' integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" rel='javascript' integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>

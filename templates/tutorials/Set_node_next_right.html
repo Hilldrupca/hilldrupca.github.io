@@ -1,0 +1,130 @@
+<div class='em-50'>
+    <h1>Binary Tree: Set node next right</h1>
+    <p>
+    Problem: Given a perfect binary tree, populate each node's next pointer to the node on it's right. Each node's next pointer is initialized to None.<br>
+    <br>
+    Language: Python
+    </p>
+    <br>
+    <p>
+    Let's start by defining what a perfect binary tree is. As the name implies, it is a binary tree. All leaf nodes are on the same level, and every parent node has two child nodes. The following are examples of perfect binary trees:
+    </p>
+    <pre>
+        <code>
+                       _1_
+                      /   \        
+            1        2     3
+           / \      / \   / \
+          2   3    4   5 6   7
+        </code>
+    </pre>
+    <p>
+    The following are <u>NOT</u> perfect binary trees:
+    </p>
+    <pre>
+        <code>
+                       _1_
+                      /   \
+            1        2     3
+             \      / \     \
+              2    4   5     6
+        </code>
+    </pre>
+    <p>
+    No matter how we decide to traverse the tree, we will always set the current node's left next pointer equal to the current node's right beginning with the root node. This also allows us to access a node's next pointer so we can also set the current node's right next pointer. Below we will discuss three approaches: level order queue, recursive, and level order nested while loops. In each instance, the following TreeNode class will be used:
+    </p>
+    <pre>
+        <code>
+        class TreeNode:
+            def __init__(self, val=0, left=None, right=None, next=None):
+                self.val = val
+                self.left = left
+                self.right = right
+                self.next = next
+        </code>
+    </pre>
+    <h5>Method 1: Queue</h5>
+    <p>
+    This approach visits each node in a level order fashion. For each node in a level, set the appropriate node pointers, and add child nodes to the queue. This is equivalent to a breadth first traversal.
+    </p>
+    <pre>
+        <code>
+        from collections import deque
+        
+        def set_next_pointer(node: TreeNode) -> None:
+            if not root or not root.left:
+                return
+            
+            queue = deque([root])
+            while queue:
+                node = queue.popleft()
+                
+                node.left.next = node.right
+                if node.next:
+                    node.right.next = node.next.left
+                    
+                # Only add child nodes if there is at least one level beyond
+                if node.left.left:
+                    queue.append(node.left)
+                    queue.append(node.right)
+        </code>
+    </pre>
+    <p>
+    Time Complexity: O(N)<br>
+    Space Complexity: O(N)
+    </p>
+    <br>
+    <h5>Method 2: Recursive</h5>
+    <p>
+    Nodes will be visited in the order of left subtree, and then right subtree beginning with the root node. Approriate next pointers will be set upon visited each node. This approach also has the benefit of relatively few lines of code.
+    </p>
+    <pre>
+        <code>
+        def set_next_pointer(node: TreeNode) -> None:
+            if not node:
+                return
+                
+            root.left.next = root.right
+            if root.next:
+                root.right.next = root.next.left
+                
+            set_next_pointer(root.left)
+            set_next_pointer(root.right)
+        </code>
+    </pre>
+    <p>
+    Time Complexity: O(N)<br>
+    Space Complexity: O(n) where n is the depth of the tree
+    </p>
+    <br>
+    <h5>Method 3: Nested While Loops (level order)</h5>
+    <p>
+    Can we improve upon the two methods above in terms of space or time complexity? As it turns out, we can. At least for space complexity. In the following approach, we will use an outer while loop to traverse the left most nodes of the tree. This always give us the beginning node of a level. Then we use an inner while loop to traverse the level from left to right. No additional memory is allocated for a queue, or heap stack.
+    </p>
+    <pre>
+        <code>
+        def set_next_pointer(node: TreeNode) -> None:
+            if not root:
+                return
+                
+            leftmost = root
+            
+            while leftmost.left:
+                cur = leftmost
+                
+                while cur:
+                    cur.left.next = cur.right
+                    
+                    if cur.next:
+                        cur.right.next = cur.next.left
+                        
+                    cur = cur.next
+                    
+                leftmost = leftmost.left
+        </code>
+    </pre>
+    <p>
+    Time Complexity: O(N)<br>
+    Space Complexity: O(1)
+    </p>
+</div>
