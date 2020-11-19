@@ -1,0 +1,260 @@
+<!doctype html>
+<html class='h-100' lang='en'>
+    <head>
+        <meta content='text/html; charset=UTF-8'>
+        <title>Factorial trailing zeroes</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href='/static/style.css' rel='stylesheet'>
+    </head>
+    <body class='bg-light h-100'>
+        <div class='container-fluid h-100'>
+            <div class='row h-100' style='flex-wrap: nowrap;'>
+                <nav class='navbar navbar-expand-lg navbar-dark bg-dark align-content-baseline'>
+                    <div class='sidebar-sticky'>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon" style='bg-light'></span>
+                        </button>
+                        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                            <ul class='nav flex-column'>
+                                <img src='/images/portrait.jpg' class='img-thumbnail rounded-circle'>
+                                <p></p>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='/index.html'>Home</a>
+                                </li>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='/projects.html'>Projects</a>
+                                </li>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='/tutorials.html'>Tutorials</a>
+                                </li>
+                                <p></p>
+                                <p></p>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='https://github.com/Hilldrupca'>Github</a>
+                                </li>
+                                <li class='nav-item justify-center'>
+                                    <a class='nav-link' href='https://www.linkedin.com/in/christopher-hilldrup-295a12179/'>LinkedIn</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class='col-sm pt-5 px-5 bg-light h-100' style='overflow-y: auto;' role='main'>
+                    <div class='em-50'>
+    <h1>Math: Count Trailing Zeroes in Factorial</h1>
+    <p>
+    Problem: Given an integer, count and return the number of trailing zeroes in it's factorial.<br>
+    <br>
+    Language: Python
+    </p>
+    <br>
+    <p>
+    This article will show three approaches to solving the problem. The first two involve calculating the number's factorial, and then employing two different methods for counting the trailing zeroes. The third, however, doesn't calculate the factorial at all. It uses powers of five. To give a quick reminder for how quickly factorials grow, here are some factorials with their lengths: 1! has a length of 1, 10! has a length of 7, and 100! has a length of 158. At the end will be a table of run times.
+    </p>
+    <p>
+    # NOTE: All methods will be saved under the same file, trailingzeroes.py
+    </p>
+    <h5>Method 1: floor division</h4>
+    First we will calculate the factorial. While the mod 10 of the factorial equals zeroe, we will increment a counter, and floor divide factorial by 10. Each floor division will remove the ones place digit.
+    <pre>
+        <code>
+        from math import factorial
+        
+        def divide_trailing_zeroes(n: int) -> int:
+        
+            num = factorial(n)
+            zeroes = 0
+            
+            while not num % 10:
+                zeroes += 1
+                num //= 10
+                
+            return zeroes
+        </code>
+    </pre>
+    <br>
+    <h5>Method 2: Convert to String</h5>
+    <p>
+    Just as before, we first calculate the factorial. Then we convert it to a string. This allows us to acces each digit by index. Next, we will count the number of zeroes starting from the last index. Breaking the loop once a non-zero number is reached.
+    </p>
+    <pre>
+        <code>
+        def str_trailing_zeroes(n: int) -> int:
+            
+            num = str(factorial(n))
+            zeroes = 0
+            
+            for i in range(len(num)-1, -1, -1):
+                if num[i] == '0':
+                    zeroes += 1
+                else:
+                    break
+                    
+            return zeroes
+        </code>
+    </pre>
+    <br>
+    <h5>Method 3: Powers of Five</h5>
+    Below are the numbers from 1 to 125, and their factorial trailing zeroes.
+    <pre>
+        <code>
+            1: 0       26: 6      51: 12     76: 18     101: 24
+            2: 0       27: 6      52: 12     77: 18     102: 24
+            3: 0       28: 6      53: 12     78: 18     103: 24
+            4: 0       29: 6      54: 12     79: 18     104: 24
+            5: 1       30: 7      55: 13     80: 19     105: 25
+            6: 1       31: 7      56: 13     81: 19     106: 25
+            7: 1       32: 7      57: 13     82: 19     107: 25
+            8: 1       33: 7      58: 13     83: 19     108: 25
+            9: 1       34: 7      59: 13     84: 19     109: 25
+            10: 2      35: 8      60: 14     85: 20     110: 26
+            11: 2      36: 8      61: 14     86: 20     111: 26
+            12: 2      37: 8      62: 14     87: 20     112: 26
+            13: 2      38: 8      63: 14     88: 20     113: 26
+            14: 2      39: 8      64: 14     89: 20     114: 26
+            15: 3      40: 9      65: 15     90: 21     115: 27
+            16: 3      41: 9      66: 15     91: 21     116: 27
+            17: 3      42: 9      67: 15     92: 21     117: 27
+            18: 3      43: 9      68: 15     93: 21     118: 27
+            19: 3      44: 9      69: 15     94: 21     119: 27
+            20: 4      45: 10     70: 16     95: 22     120: 28
+            21: 4      46: 10     71: 16     96: 22     121: 28
+            22: 4      47: 10     72: 16     97: 22     122: 28
+            23: 4      48: 10     73: 16     98: 22     123: 28
+            24: 4      49: 10     74: 16     99: 22     124: 28
+            25: 6      50: 12     75: 18     100: 24    125: 31
+        </code>
+    </pre>
+    <p>
+    For every multiple of five the number of trailing zeroes increases. How large the increase is is determined by how many powers of five it is evenly divisible. For example, the numbers 5, 10, 15, and 20 are all only divisble by 5<sup>1</sup>, and thus the increase at those times is +1. However, the next multiple of five is 25. It is divisble by 5<sup>1</sup>, and 5<sup>2</sup> so the increase is +2. And for 125, the incrase is +3, because it is divisble by 5<sup>1</sup>, 5<sup>2</sup>, and 5<sup>3</sup>. We will make use of this trend for a much faster way to count the number of trailing zeroes.
+    </p>
+    <pre>
+        <code>
+        def pow_trailing_zeroes(n: int) -> int:
+            
+            zeroes = 0
+            five_pow = 5
+            
+            while five_pow &lt;= n:
+                zeroes += n//five_pow
+                five_pow *= 5
+                
+            return zeroes
+        </code>
+    </pre>
+    <br>
+    <h5>Run Times</h5>
+    <p>
+    We can use python's timeit module to compare runtimes. Note that when testing the above functions importing the file was done during the setup. This means it wouldn't be counted in the results. Settings were kept to default values otherwise. Before we look at the results, here are the lengths of each input factorial, and the runtimes of calculating the factorials and converting each to a string.
+    </p>
+    <br>
+    # NOTE: Runtimes are a best of, not an average, and will vary depending on hardware.
+    <table class='table table-striped'>
+        <thead>
+            <tr>
+                <th scope='col'>Input</th>
+                <th scope='col'>Factorial Length</th>
+                <th scope='col'>Calculate Factorial</th>
+                <th scope='col'>Convert to String</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>26.7 nsec</td>
+                <td>152 nsec</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>7</td>
+                <td>39.1 nsec</td>
+                <td>167 nsec</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>158</td>
+                <td>642 nsec</td>
+                <td>1.1 usec</td>
+            </tr>
+            <tr>
+                <td>1000</td>
+                <td>2568</td>
+                <td>23.7 usec</td>
+                <td>93.4 usec</td>
+            </tr>
+            <tr>
+                <td>10000</td>
+                <td>35660</td>
+                <td>1.72 msec</td>
+                <td>15 msec</td>
+            </tr>
+            <tr>
+                <td>100000</td>
+                <td>456574</td>
+                <td>97.9 msec</td>
+                <td>2.29 sec</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <p>
+    Now the results of the actual functions.
+    </p>
+    <br>
+    # NOTE: Runtimes are a best of, not an average, and will vary depending on hardware.
+    <table class='table table-striped'>
+        <thead>
+            <th>Input</th>
+            <th>Divide</th>
+            <th>String</th>
+            <th>Power of Five</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>145 nsec</td>
+                <td>474 nsec</td>
+                <td>93.6 nsec</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>267 nsec</td>
+                <td>592 nsec</td>
+                <td>161 nsec</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>4.62 usec</td>
+                <td>2.57 usec</td>
+                <td>223 nsec</td>
+            </tr>
+            <tr>
+                <td>1000</td>
+                <td>418 usec</td>
+                <td>109 usec</td>
+                <td>351 nsec</td>
+            </tr>
+            <tr>
+                <td>10000</td>
+                <td>52.9 msec</td>
+                <td>15.3 msec</td>
+                <td>513 nsec</td>
+            </tr>
+            <tr>
+                <td>100000</td>
+                <td>6.65 sec</td>
+                <td>2.28 sec</td>
+                <td>684 nsec</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" rel='javascript' integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" rel='javascript' integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" rel='javascript' integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>
